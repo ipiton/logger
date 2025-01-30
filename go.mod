@@ -1,4 +1,4 @@
-module github.com/ipiton/logger/v1
+module github.com/ipiton/logger
 
 go 1.18
 

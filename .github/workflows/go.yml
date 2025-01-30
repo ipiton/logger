@@ -7,23 +7,39 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
         go-version: '1.18'
+        cache: true
 
-    - name: Build
-      run: go build -v ./...
+    - name: Install dependencies
+      run: |
+        go mod download
+        go mod tidy
 
-    - name: Test
-      run: go test -v -race -coverprofile=coverage.out ./...
+    - name: Run tests
+      run: make test
+
+    - name: Run linters
+      run: make lint
+
+    - name: Build examples
+      run: |
+        cd examples/basic && go mod tidy && go build
+        cd ../advanced && go mod tidy && go build
+        cd ../file_logging && go mod tidy && go build
+        cd ../global_logger && go mod tidy && go build
 
     - name: Upload coverage
       uses: codecov/codecov-action@v3
       with:
-        file: ./coverage.out
+        files: ./coverage.out
+
+    - name: Build
+      run: go build -v ./...
