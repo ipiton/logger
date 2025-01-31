@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ipiton/logger"
+	"github.com/ipiton/logger/v1"
 )
 
 func main() {
